@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>字型渲染設定</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>字型渲染 Font Rendering</h1>
+      <p class="subtitle">優化瀏覽器字型渲染效果</p>
+    </header>
+
+    <div class="settings">
+      <!-- Font Selection -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fontSelect">字型替換</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="fontFace" checked>
+            <span class="toggle-slider"></span>
+          </div>
+        </div>
+        <select id="fontSelect" class="setting-input" size="10">
+          <option value="">-- 載入中... --</option>
+        </select>
+        <p class="setting-desc">列出系統已安裝的所有字型（可搜尋）</p>
+        <input type="text" id="fontSearch" class="setting-input font-search-input" placeholder="搜尋字型..." style="margin-top:4px;">
+        <div style="display:flex;gap:4px;margin-top:4px;">
+          <input type="text" id="fontCustom" class="setting-input" placeholder="或手動輸入字型名稱..." style="flex:1;">
+          <button id="fontCustomApply" class="btn btn-primary" style="flex-shrink:0;padding:4px 10px;font-size:12px;">加入</button>
+        </div>
+        <p class="setting-desc">如果找不到需要的字型，可直接輸入字型名稱</p>
+      </div>
+
+      <!-- Font Smoothing -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fontSmooth">字型平滑</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="fontSmooth" checked>
+            <span class="toggle-slider"></span>
+          </div>
+        </div>
+        <p class="setting-desc">啟用字型平滑渲染，讓文字更加清晰</p>
+      </div>
+
+      <!-- Font Size Scaling -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fontSize">字型縮放</label>
+          <div class="scale-control">
+            <input type="range" id="fontSize" min="0.8" max="2.0" step="0.05" value="1.0">
+            <span id="fontSizeValue" class="scale-value">1.00x</span>
+          </div>
+        </div>
+        <p class="setting-desc">調整字型大小比例 (0.8x ~ 2.0x)</p>
+      </div>
+
+      <!-- Text Stroke -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fontStroke">字型描邊</label>
+          <div class="scale-control">
+            <input type="range" id="fontStroke" min="0" max="1" step="0.05" value="0">
+            <span id="fontStrokeValue" class="scale-value">0px</span>
+          </div>
+        </div>
+        <p class="setting-desc">為文字添加描邊效果 (0 ~ 1px)</p>
+      </div>
+
+      <!-- Text Shadow -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fontShadow">字型陰影</label>
+          <div class="scale-control">
+            <input type="range" id="fontShadow" min="0" max="4" step="0.5" value="0">
+            <span id="fontShadowValue" class="scale-value">0px</span>
+          </div>
+        </div>
+        <p class="setting-desc">為文字添加陰影效果 (0 ~ 4px)</p>
+      </div>
+
+      <!-- Shadow Color -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="shadowColor">陰影顏色</label>
+          <input type="color" id="shadowColor" class="color-input" value="#ffffff">
+        </div>
+        <p class="setting-desc">選擇陰影顏色</p>
+      </div>
+
+      <!-- Canvas Font -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="renderCanvas">Canvas 字型替換</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="renderCanvas" checked>
+            <span class="toggle-slider"></span>
+          </div>
+        </div>
+        <p class="setting-desc">替換 Canvas 畫布中的字型渲染</p>
+      </div>
+
+      <!-- Bold Fix -->
+      <div class="setting-group">
+        <div class="setting-row">
+          <label class="setting-label" for="fixStroke">粗體修正</label>
+          <div class="toggle-switch">
+            <input type="checkbox" id="fixStroke" checked>
+            <span class="toggle-slider"></span>
+          </div>
+        </div>
+        <p class="setting-desc">修正 Chromium 96+ 粗體描邊渲染錯誤</p>
+      </div>
+
+      <!-- CSS Include -->
+      <div class="setting-group">
+        <label class="setting-label" for="fontCSS">CSS 包含選擇器</label>
+        <textarea id="fontCSS" class="setting-textarea" rows="3" placeholder="body, p, div, span, a, h1, h2, h3, h4, h5, h6, li, td, th, label, option">body, p, div, span, a, h1, h2, h3, h4, h5, h6, li, td, th, label, option</textarea>
+        <p class="setting-desc">指定需要應用字型替換的 CSS 選擇器，以逗號分隔</p>
+      </div>
+
+      <!-- CSS Exclude -->
+      <div class="setting-group">
+        <label class="setting-label" for="fontEx">CSS 排除選擇器</label>
+        <textarea id="fontEx" class="setting-textarea" rows="2" placeholder="排除不需要應用字型替換的區域"></textarea>
+        <p class="setting-desc">指定不需要應用字型替換的 CSS 選擇器</p>
+      </div>
+
+      <!-- Quick Preview -->
+      <div class="preview-section">
+        <h3>即時預覽</h3>
+        <div class="preview-box" id="previewBox">
+          <p class="preview-text">
+            快速預覽字型效果<br>
+            <span class="preview-sub">The quick brown fox jumps over the lazy dog</span><br>
+            <span class="preview-sub">1234567890</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="button-group">
+        <button id="applyBtn" class="btn btn-primary">套用設定</button>
+        <button id="resetBtn" class="btn btn-secondary">重置預設</button>
+      </div>
+
+      <!-- Status -->
+      <div id="status" class="status"></div>
+    </div>
+
+    <footer class="footer">
+      <p>基於 F9y4ng/GreasyFork-Scripts 改製</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
