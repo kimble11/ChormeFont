@@ -352,10 +352,6 @@
           image-rendering:auto!important;
           /* macOS font-variation-settings — no variable font adjustments */
           font-variation-settings:normal!important;
-          /* macOS color — prevent color fonts from interfering */
-          color:inherit!important;
-          /* macOS text-shadow — subtle text shadow for depth */
-          text-shadow:0 0 0.5px rgba(0,0,0,0.05)!important;
         }`;
 
         // macOS heading adjustments — tighter letter-spacing for headings
