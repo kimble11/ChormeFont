@@ -23,6 +23,7 @@
     fontSelect: "Microsoft YaHei",
     fontFace: true,
     fontSmooth: true,
+    macosMode: false,
     fontSize: 1.0,
     fontStroke: 0,
     fontShadow: 0,
@@ -264,7 +265,7 @@
 
     // Generate the CSS text based on current config
     generateCSS() {
-      const { fontSelect, fontFace, fontSmooth, fontSize, fontStroke, fontShadow, shadowColor, fontCSS, fontEx } = this.config;
+      const { fontSelect, fontFace, fontSmooth, macosMode, fontSize, fontStroke, fontShadow, shadowColor, fontCSS, fontEx } = this.config;
 
       // CSS include selectors
       const include = fontCSS || "body, p, div, span, a, h1, h2, h3, h4, h5, h6, li, td, th, label, option";
@@ -314,6 +315,66 @@
           font-optical-sizing:auto!important;
           font-kerning:auto!important;
           ${smoothGecko}${smoothMac}
+        }`;
+      }
+
+      // macOS rendering mode
+      if (macosMode) {
+        cssText += `:is(${include}){
+          /* macOS-style subpixel font rendering */
+          -webkit-font-smoothing:antialiased!important;
+          -moz-osx-font-smoothing:grayscale!important;
+          /* macOS letter-spacing — CJK uses wider tracking */
+          letter-spacing:0.01em!important;
+          /* macOS line-height — closer to macOS default */
+          line-height:1.5!important;
+          /* macOS font rendering — optimize for legibility with subpixel antialiasing */
+          text-rendering:geometricPrecision!important;
+          /* macOS font-synthesis — prevent bold from being too heavy */
+          font-synthesis:none!important;
+          /* macOS font-variant — disable contextual alternates by default */
+          font-variant-ligatures:none!important;
+          font-variant-caps:normal!important;
+          font-variant-numeric:normal!important;
+          /* macOS font-kerning — normal kerning */
+          font-kerning:normal!important;
+          /* macOS font-optical-sizing — enable for better small text */
+          font-optical-sizing:auto!important;
+          /* macOS text-underline-offset — underlines sit further from text */
+          text-underline-offset:0.1em!important;
+          /* macOS font-size-adjust — slight adjustment for CJK text */
+          font-size-adjust:none!important;
+          /* macOS font-weight — prevent synthetic bold from being too heavy */
+          font-weight-adjust:none!important;
+          /* macOS shape-rendering — geometric precision for crisp text */
+          shape-rendering:geometricPrecision!important;
+          /* macOS image-rendering — auto (no crisp-edges) */
+          image-rendering:auto!important;
+          /* macOS font-variation-settings — no variable font adjustments */
+          font-variation-settings:normal!important;
+          /* macOS color — prevent color fonts from interfering */
+          color:inherit!important;
+          /* macOS text-shadow — subtle text shadow for depth */
+          text-shadow:0 0 0.5px rgba(0,0,0,0.05)!important;
+        }`;
+
+        // macOS heading adjustments — tighter letter-spacing for headings
+        cssText += `:is(h1,h2,h3,h4,h5,h6){
+          letter-spacing:0.005em!important;
+          font-weight:600!important;
+        }`;
+
+        // macOS code block adjustments — monospace with proper rendering
+        cssText += `:is(code,pre,pre code,pre span){
+          -webkit-font-smoothing:subpixel-antialiased!important;
+          letter-spacing:0!important;
+          font-kerning:auto!important;
+        }`;
+
+        // macOS link adjustments — proper underline offset
+        cssText += `:is(a){
+          text-underline-offset:0.15em!important;
+          text-decoration-thickness:1px!important;
         }`;
       }
 

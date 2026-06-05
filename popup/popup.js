@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     shadowColor: document.getElementById("shadowColor"),
     renderCanvas: document.getElementById("renderCanvas"),
     fixStroke: document.getElementById("fixStroke"),
+    macosMode: document.getElementById("macOSMode"),
     fontCSS: document.getElementById("fontCSS"),
     fontEx: document.getElementById("fontEx"),
     applyBtn: document.getElementById("applyBtn"),
@@ -89,6 +90,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   elements.fontSmooth.addEventListener("change", () => {
+    updatePreview();
+  });
+
+  elements.macosMode.addEventListener("change", () => {
     updatePreview();
   });
 
@@ -423,6 +428,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     elements.fontFace.checked = config.fontFace !== false;
     elements.fontSelect.disabled = !elements.fontFace.checked;
     elements.fontSmooth.checked = config.fontSmooth !== false;
+    elements.macosMode.checked = !!config.macosMode;
     elements.fontSize.value = config.fontSize || 1.0;
     elements.fontSizeValue.textContent = (config.fontSize || 1.0).toFixed(2) + "x";
     elements.fontStroke.value = config.fontStroke || 0;
@@ -442,6 +448,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       fontSelect: elements.fontSelect.value,
       fontFace: elements.fontFace.checked,
       fontSmooth: elements.fontSmooth.checked,
+      macosMode: elements.macosMode.checked,
       fontSize: parseFloat(elements.fontSize.value),
       fontStroke: parseFloat(elements.fontStroke.value),
       fontShadow: parseFloat(elements.fontShadow.value),
@@ -458,6 +465,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       fontSelect: "Microsoft YaHei",
       fontFace: true,
       fontSmooth: true,
+      macosMode: false,
       fontSize: 1.0,
       fontStroke: 0,
       fontShadow: 0,
@@ -490,6 +498,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function updatePreview() {
     const font = elements.fontFace.checked ? elements.fontSelect.value : "";
     const smooth = elements.fontSmooth.checked;
+    const macos = elements.macosMode.checked;
     const stroke = parseFloat(elements.fontStroke.value);
     const shadow = parseFloat(elements.fontShadow.value);
     const shadowColor = elements.shadowColor.value;
@@ -510,6 +519,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       previewStyle.webkitFontSmoothing = "";
       previewStyle.webkitAntialias = "";
       previewStyle.MozOsxFontSmoothing = "";
+    }
+
+    if (macos) {
+      previewStyle.letterSpacing = "0.01em";
+      previewStyle.lineHeight = "1.5";
+      previewStyle.textRendering = "geometricPrecision";
+      previewStyle.fontSynthesis = "none";
+      previewStyle.fontVariantLigatures = "none";
+      previewStyle.fontKerning = "normal";
+      previewStyle.textShadow = "0 0 0.5px rgba(0,0,0,0.05)";
+    } else {
+      previewStyle.letterSpacing = "";
+      previewStyle.lineHeight = "";
+      previewStyle.textRendering = "";
+      previewStyle.fontSynthesis = "";
+      previewStyle.fontVariantLigatures = "";
+      previewStyle.fontKerning = "";
+      previewStyle.textShadow = "";
     }
 
     if (stroke > 0) {
