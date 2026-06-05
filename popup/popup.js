@@ -93,7 +93,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     updatePreview();
   });
 
-  elements.macosMode.addEventListener("change", () => {
+  elements.macosMode.addEventListener("change", async () => {
+    // Immediately save and apply macOS mode change
+    const config = collectConfig();
+    await chrome.storage.local.set(config);
+    try {
+      const tabs = await chrome.tabs.query({});
+      for (const tab of tabs) {
+        if (tab.id) {
+          chrome.tabs.sendMessage(tab.id, {
+            action: "updateConfig",
+            config: config
+          }).catch(() => {});
+        }
+      }
+      showStatus(elements.macosMode.checked ? "macOS 渲染模式已開啟" : "macOS 渲染模式已關閉", "success");
+    } catch (e) {
+      showStatus("套用失敗: " + e.message, "error");
+    }
     updatePreview();
   });
 
