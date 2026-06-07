@@ -374,12 +374,11 @@
         }`;
       }
 
-      // Font size scaling
+      // Font size scaling — use font-size on :root to avoid compounding on nested elements
       if (fontSize !== 1 && fontSize > 0.8 && fontSize <= 2.5) {
-        cssText += `:is(${include}){
-          transform:scale(var(--fr-font-fontscale));
-          transform-origin:left top;
-        }`;
+        cssText += `:root{--fr-font-fontscale:${fontSize};font-size:${fontSize * 100}%!important;}`;
+        // Also apply to common text containers that might have explicit font-size reset
+        cssText += `:is(${include}){font-size:inherit!important;}`;
       }
 
       // Text stroke

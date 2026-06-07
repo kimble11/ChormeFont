@@ -88,6 +88,21 @@ body {
   gap: 12px;
 }
 
+/* Toggle wrapper for labels that contain both text and switch */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  cursor: pointer;
+}
+
+.toggle-wrapper .setting-label {
+  margin-bottom: 0;
+  flex: 1;
+}
+
 /* Toggle Switch */
 .toggle-switch {
   position: relative;
